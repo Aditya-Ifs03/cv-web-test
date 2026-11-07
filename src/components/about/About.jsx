@@ -15,7 +15,7 @@ export default function About() {
               alt={`Portrait of ${profile.name}`}
               className="about__photo"
               width="480"
-              height="560"
+              height="640"
               loading="lazy"
               decoding="async"
             />

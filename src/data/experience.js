@@ -1,27 +1,19 @@
 // Ordered newest first. `type` is shown as a label: 'Education' | 'Work' | 'Project' | 'Organization'
 export const experience = [
   {
-    id: 'edu-1',
-    period: '[YEAR] — Present',
-    title: 'Informatics Student',
-    organization: '[UNIVERSITY NAME]',
+    id: 'itdel',
+    period: '2024 — Present',
+    title: 'Undergraduate Student, Informatics',
+    organization: 'Institut Teknologi Del',
     type: 'Education',
-    description: '[Relevant coursework, GPA, or focus area.]',
+    description: '',
   },
   {
-    id: 'exp-1',
-    period: '[YEAR]',
-    title: '[ROLE / PROJECT TITLE]',
-    organization: '[COMPANY / ORGANIZATION]',
-    type: 'Project',
-    description: '[What you built or did, and the impact. One or two sentences.]',
-  },
-  {
-    id: 'exp-2',
-    period: '[YEAR]',
-    title: '[ROLE]',
-    organization: '[ORGANIZATION]',
+    id: 'himasti',
+    period: '2024 — Present',
+    title: 'Member, Kominfo Division',
+    organization: 'Himpunan Mahasiswa Informatika (HIMASTI), Institut Teknologi Del',
     type: 'Organization',
-    description: '[Responsibilities and achievements.]',
+    description: 'Communication & information division of the informatics student association.',
   },
 ];

@@ -28,9 +28,11 @@ export default function Hero() {
             <Button href="#projects" icon="arrowRight">
               View my projects
             </Button>
-            <Button href={profile.cvUrl} variant="secondary" icon="download" download>
-              Download CV
-            </Button>
+            {profile.cvUrl && (
+              <Button href={profile.cvUrl} variant="secondary" icon="download" download>
+                Download CV
+              </Button>
+            )}
           </div>
 
           <div className="hero__meta">

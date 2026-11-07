@@ -15,7 +15,7 @@ npm run lint
 ## Project structure
 
 ```
-public/            Static files served as-is (favicon, cv.pdf, robots.txt)
+public/            Static files served as-is (favicon, og-image.png, robots.txt, cv.pdf)
 src/
 ├── assets/images/ Profile photo & project screenshots (imported from data files)
 ├── components/
@@ -44,7 +44,7 @@ Each component sits next to its own `.css` file.
 | Certificates (optional)      | `src/data/certificates.js` (an empty array hides the section) |
 | Nav items                    | `src/data/navigation.js`                         |
 | Page title, SEO, Open Graph  | `index.html`                                     |
-| CV file                      | replace `public/cv.pdf`                          |
+| CV file                      | add `public/cv.pdf`, then set `cvUrl: '/cv.pdf'` in `profile.js` |
 
 Search the project for `[` to find every remaining placeholder.
 

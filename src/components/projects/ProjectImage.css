@@ -2,6 +2,7 @@
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+  object-position: left top;
   background: var(--color-surface-2);
   transition: transform 0.5s var(--ease);
 }
