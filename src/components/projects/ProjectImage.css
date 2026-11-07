@@ -1,0 +1,41 @@
+.project-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: var(--color-surface-2);
+  transition: transform 0.5s var(--ease);
+}
+
+.project-image--placeholder {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(var(--color-border) 1px, transparent 1px) 0 0 / 100% 24px,
+    var(--color-surface-2);
+  background-blend-mode: normal;
+}
+
+.project-image__window {
+  position: absolute;
+  top: 0.875rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.375rem;
+}
+
+.project-image__window span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+}
+
+.project-image__label {
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text-subtle);
+}

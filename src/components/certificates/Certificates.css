@@ -1,0 +1,59 @@
+.certificates {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .certificates {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.certificate {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.certificate__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+}
+
+.certificate__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.certificate__name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.certificate__issuer {
+  font-size: 0.875rem;
+  color: var(--color-text-subtle);
+}
+
+.certificate__link {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+.certificate__link:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}

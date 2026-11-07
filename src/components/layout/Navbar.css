@@ -1,0 +1,146 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.navbar--raised {
+  border-bottom-color: var(--color-border);
+}
+
+/* Blur lives on a pseudo-element: backdrop-filter on .navbar itself would
+   become the containing block for the fixed mobile menu. */
+.navbar--raised::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: var(--nav-height);
+}
+
+.navbar__logo {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.navbar__menu {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.navbar__link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  transition: color var(--dur) var(--ease);
+}
+
+.navbar__link:hover,
+.navbar__link[aria-current] {
+  color: var(--color-text);
+}
+
+/* Active indicator: small dot under the link (not color alone). */
+.navbar__link[aria-current]::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0.125rem;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  transform: translateX(-50%);
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navbar__icon-btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  transition:
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+.navbar__icon-btn:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+
+.navbar__toggle {
+  display: none;
+}
+
+/* ---------- Mobile / tablet ---------- */
+@media (max-width: 767px) {
+  .navbar__toggle {
+    display: grid;
+  }
+
+  .navbar__menu {
+    position: fixed;
+    inset: var(--nav-height) 0 0 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem var(--gutter) 2rem;
+    background: var(--color-bg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      visibility var(--dur);
+  }
+
+  .navbar__menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .navbar__link {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0;
+    font-size: 1.25rem;
+  }
+
+  .navbar__link[aria-current]::after {
+    left: auto;
+    right: 0;
+    top: 50%;
+    bottom: auto;
+    width: 6px;
+    height: 6px;
+    transform: translateY(-50%);
+  }
+}

@@ -1,0 +1,24 @@
+.section-title {
+  max-width: 40rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.section-title__eyebrow {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-accent-strong);
+}
+
+.section-title__heading {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.section-title__description {
+  margin-top: 0.875rem;
+  font-size: 1.0625rem;
+  color: var(--color-text-muted);
+}
