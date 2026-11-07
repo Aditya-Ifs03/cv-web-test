@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { drawDotGrid } from '../../utils/dotGrid';
+import './DotGridBackground.css';
 
 const EASE_POSITION = 0.14;
 const EASE_INTENSITY = 0.08;
@@ -15,11 +16,12 @@ function readColors() {
 }
 
 /**
- * Faint dot grid behind the hero. Dots near the mouse light up in the accent
- * color. On touch devices a soft glow drifts slowly across the grid instead.
- * Pauses off-screen / in background tabs; static for reduced-motion users.
+ * Faint dot grid fixed behind the whole page; the dots scroll with the content.
+ * Dots near the mouse light up in the accent color. On touch devices a soft
+ * glow drifts slowly across the screen instead. Only animates while something
+ * is changing, pauses in background tabs, and is static for reduced motion.
  */
-export default function HeroBackground() {
+export default function DotGridBackground() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -32,27 +34,40 @@ export default function HeroBackground() {
     let width = 0;
     let height = 0;
     let frame = 0;
-    let inView = true;
     let colors = readColors();
     const state = { x: 0, y: 0, tx: 0, ty: 0, intensity: 0, target: 0 };
 
-    const ambient = () => !finePointer.matches;
-    const animated = () => !reduceMotion.matches;
+    const ambient = () => !finePointer.matches && !reduceMotion.matches;
 
     const render = () =>
-      drawDotGrid(ctx, { width, height, x: state.x, y: state.y, intensity: state.intensity, colors });
+      drawDotGrid(ctx, {
+        width,
+        height,
+        x: state.x,
+        y: state.y,
+        intensity: state.intensity,
+        colors,
+        scrollY: window.scrollY,
+      });
 
     const tick = (time) => {
+      frame = 0;
       if (ambient()) {
         // Slow Lissajous path for devices without a mouse.
-        state.tx = width * (0.62 + 0.25 * Math.sin(time * 0.00021));
-        state.ty = height * (0.45 + 0.3 * Math.sin(time * 0.00029 + 1));
+        state.tx = width * (0.6 + 0.3 * Math.sin(time * 0.00021));
+        state.ty = height * (0.5 + 0.35 * Math.sin(time * 0.00029 + 1));
         state.target = 0.65;
       }
 
-      state.x += (state.tx - state.x) * EASE_POSITION;
-      state.y += (state.ty - state.y) * EASE_POSITION;
-      state.intensity += (state.target - state.intensity) * EASE_INTENSITY;
+      if (reduceMotion.matches) {
+        state.x = state.tx;
+        state.y = state.ty;
+        state.intensity = 0;
+      } else {
+        state.x += (state.tx - state.x) * EASE_POSITION;
+        state.y += (state.ty - state.y) * EASE_POSITION;
+        state.intensity += (state.target - state.intensity) * EASE_INTENSITY;
+      }
       render();
 
       const settled =
@@ -60,87 +75,78 @@ export default function HeroBackground() {
         Math.abs(state.tx - state.x) < 0.5 &&
         Math.abs(state.ty - state.y) < 0.5;
 
-      frame =
-        inView && !document.hidden && (ambient() || !settled) ? requestAnimationFrame(tick) : 0;
+      if (!document.hidden && !reduceMotion.matches && (ambient() || !settled)) {
+        frame = requestAnimationFrame(tick);
+      }
     };
 
-    const start = () => {
-      if (!frame && inView && !document.hidden && animated()) frame = requestAnimationFrame(tick);
+    // Request one frame; tick() keeps going only while something is moving.
+    const schedule = () => {
+      if (!frame && !document.hidden) frame = requestAnimationFrame(tick);
     };
 
     const resize = () => {
-      const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = rect.width;
-      height = rect.height;
+      width = window.innerWidth;
+      height = window.innerHeight;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       render();
     };
 
     const onPointerMove = (e) => {
       if (ambient() || e.pointerType === 'touch') return;
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const inside = x >= 0 && y >= 0 && x <= rect.width && y <= rect.height;
-
-      if (inside && state.intensity < 0.02) {
-        state.x = x; // appear under the cursor instead of sliding in
-        state.y = y;
+      if (state.intensity < 0.02) {
+        state.x = e.clientX; // appear under the cursor instead of sliding in
+        state.y = e.clientY;
       }
-      state.tx = x;
-      state.ty = y;
-      state.target = inside ? 1 : 0;
-      start();
+      state.tx = e.clientX;
+      state.ty = e.clientY;
+      state.target = 1;
+      schedule();
     };
 
     const onPointerLeave = () => {
       state.target = 0;
-      start();
+      schedule();
     };
 
     const onThemeChange = () => {
       colors = readColors();
-      render();
+      schedule();
     };
-
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(canvas);
-
-    const viewObserver = new IntersectionObserver(([entry]) => {
-      inView = entry.isIntersecting;
-      start();
-    });
-    viewObserver.observe(canvas);
 
     const themeObserver = new MutationObserver(onThemeChange);
     themeObserver.observe(document.documentElement, { attributeFilter: ['data-theme'] });
 
+    window.addEventListener('resize', resize);
+    window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
-    document.addEventListener('visibilitychange', start);
+    document.addEventListener('visibilitychange', schedule);
     darkScheme.addEventListener('change', onThemeChange);
-    finePointer.addEventListener('change', start);
-    reduceMotion.addEventListener('change', start);
+    finePointer.addEventListener('change', schedule);
+    reduceMotion.addEventListener('change', schedule);
 
     resize();
-    start();
+    schedule();
 
     return () => {
       cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      viewObserver.disconnect();
       themeObserver.disconnect();
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', schedule);
       window.removeEventListener('pointermove', onPointerMove);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
-      document.removeEventListener('visibilitychange', start);
+      document.removeEventListener('visibilitychange', schedule);
       darkScheme.removeEventListener('change', onThemeChange);
-      finePointer.removeEventListener('change', start);
-      reduceMotion.removeEventListener('change', start);
+      finePointer.removeEventListener('change', schedule);
+      reduceMotion.removeEventListener('change', schedule);
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="hero__bg" aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="dot-grid-bg" aria-hidden="true" />;
 }

@@ -24,7 +24,7 @@ src/
 │   └── <section>/ One folder per page section (hero, about, skills, projects, ...)
 ├── data/          ALL portfolio content. Edit these files, not the components.
 ├── hooks/         useTheme, useActiveSection, useReveal, useScrolled
-├── utils/         dotGrid.js — drawing logic for the hero background
+├── utils/         dotGrid.js — drawing logic for the page background
 ├── pages/Home.jsx Composes the sections in order
 ├── App.jsx        Skip link + Navbar + main + Footer
 └── index.css      Design tokens, reset, utilities, motion
@@ -85,9 +85,9 @@ Use WebP or AVIF screenshots about 1200×750 px (16:10).
 
 All colors are CSS variables at the top of `src/index.css`. The light theme is in `:root` and the dark theme is in the two dark blocks; keep those two dark blocks identical. To change the accent color, edit `--color-accent`, `--color-accent-strong` (used for text, so check contrast) and `--color-accent-soft`. The site follows the OS theme until the visitor uses the toggle, which is then saved to `localStorage`.
 
-### Hero background
+### Background
 
-The interactive dot grid behind the hero lives in `src/components/hero/HeroBackground.jsx`. Its look (dot spacing, glow radius, dot size) is set by `GRID` in `src/utils/dotGrid.js`, and its colors come from the theme tokens. It stops animating when the hero is off-screen or the tab is hidden, and it stays static for visitors who turned on "reduce motion".
+The interactive dot grid behind the whole page lives in `src/components/layout/DotGridBackground.jsx`. Its look (dot spacing, glow radius, dot size) is set by `GRID` in `src/utils/dotGrid.js`, and its colors come from the theme tokens. It only animates while the mouse or page is moving, pauses in hidden tabs, and it stays static for visitors who turned on "reduce motion".
 
 ## Deploying
 

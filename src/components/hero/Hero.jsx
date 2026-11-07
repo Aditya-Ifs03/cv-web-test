@@ -3,13 +3,11 @@ import Button from '../common/Button';
 import Icon from '../common/Icon';
 import SocialLinks from '../common/SocialLinks';
 import Container from '../layout/Container';
-import HeroBackground from './HeroBackground';
 import './Hero.css';
 
 export default function Hero() {
   return (
     <section id="top" className="hero" aria-labelledby="hero-title">
-      <HeroBackground />
       <Container>
         <div className="hero__content">
           {profile.availability && (

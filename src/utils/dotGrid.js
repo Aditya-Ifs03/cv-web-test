@@ -1,4 +1,4 @@
-// Pure drawing logic for the interactive dot grid behind the hero.
+// Pure drawing logic for the interactive dot grid behind the page.
 
 export const GRID = {
   gap: 28, // distance between dots (px)
@@ -8,13 +8,14 @@ export const GRID = {
   maxSize: 4.5, // size of a fully lit dot (px)
 };
 
-export function drawDotGrid(ctx, { width, height, x, y, intensity, colors }) {
+export function drawDotGrid(ctx, { width, height, x, y, intensity, colors, scrollY = 0 }) {
   const { gap, radius, push, baseSize, maxSize } = GRID;
   ctx.clearRect(0, 0, width, height);
 
-  // Center the grid inside the canvas.
+  // Center the grid horizontally; shift it vertically with the page scroll
+  // so the dots move together with the content.
   const startX = ((width % gap) + gap) / 2;
-  const startY = ((height % gap) + gap) / 2;
+  const startY = gap / 2 - (scrollY % gap);
   const lit = [];
 
   // Pass 1: idle dots, one fill color for all of them.

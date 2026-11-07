@@ -167,7 +167,8 @@ main:focus {
 }
 
 .section--alt {
-  background: var(--color-surface);
+  /* Slightly see-through so the page background grid still shows. */
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
   border-block: 1px solid var(--color-border);
 }
 
